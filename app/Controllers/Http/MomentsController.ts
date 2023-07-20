@@ -5,6 +5,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Moment from 'App/Models/Moment'
 
 import Application from '@ioc:Adonis/Core/Application'
+import { Request } from '@adonisjs/core/build/standalone'
 
 export default class MomentsController {
   private validationOptions = {
@@ -34,6 +35,14 @@ export default class MomentsController {
     return {
       message: 'Momento criado com sucesso!',
       data: moment,
+    }
+  }
+
+  public async index() {
+    const moments = await Moment.all()
+
+    return {
+      data: moments,
     }
   }
 }
