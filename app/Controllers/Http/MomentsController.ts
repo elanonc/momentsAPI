@@ -19,8 +19,7 @@ export default class MomentsController {
     const image = request.file('image', this.validationOptions)
 
     if (image) {
-      const imageName = `${uuidv4()}.${image.extname}` // id aleatório + extensão
-
+      const imageName = `${uuidv4()}.${image.extname}`
       await image.move(Application.tmpPath('uploads'), {
         name: imageName,
       })
@@ -39,7 +38,7 @@ export default class MomentsController {
   }
 
   public async index() {
-    const moments = await Moment.all()
+    const moments = await Moment.query().preload('comments')
 
     return {
       data: moments,
@@ -48,6 +47,8 @@ export default class MomentsController {
 
   public async show({ params }: HttpContextContract) {
     const moment = await Moment.findOrFail(params.id)
+
+    await moment.load('comments')
 
     return {
       data: moment,
